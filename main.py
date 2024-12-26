@@ -1,10 +1,21 @@
-import os
+import argparse
 from collections import defaultdict
 from datetime import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 import pandas
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+
+
+def create_parser() -> 'argparse.ArgumentParser':
+    parser = argparse.ArgumentParser(description='Wine shop site')
+    parser.add_argument(
+        '--wine-data',
+        default='wine.xlsx',
+        help='Path to the wine data Excel file'
+    )
+    args = parser.parse_args()
+    return args.wine_data
 
 
 def calculate_years_since_founding(founding_year: int) -> int:
@@ -47,8 +58,8 @@ def main():
     years_since_founding = calculate_years_since_founding(founding_year)
     year_suffix = get_year_suffix(years_since_founding)
 
-    WINE_DATA_PATH = os.environ.get('WINE_DATA_PATH', 'wine.xlsx')
-    categorized_wines = load_and_group_wines(WINE_DATA_PATH)
+    wine_data_path = create_parser()
+    categorized_wines = load_and_group_wines(wine_data_path)
 
     rendered_page = template.render(
         difference_years=years_since_founding,
