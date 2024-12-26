@@ -1,3 +1,4 @@
+import os
 from collections import defaultdict
 from datetime import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
@@ -46,7 +47,8 @@ def main():
     years_since_founding = calculate_years_since_founding(founding_year)
     year_suffix = get_year_suffix(years_since_founding)
 
-    categorized_wines = load_and_group_wines('wine3.xlsx')
+    WINE_DATA_PATH = os.environ.get('WINE_DATA_PATH', 'wine.xlsx')
+    categorized_wines = load_and_group_wines(WINE_DATA_PATH)
 
     rendered_page = template.render(
         difference_years=years_since_founding,
